@@ -1,0 +1,1 @@
+export { PeopleGrid } from './ui';
