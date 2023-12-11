@@ -1,20 +1,7 @@
-import { usePeopleList } from 'entities/person/model';
-import { PeopleGrid } from 'entities/person';
-import { SearchInput } from 'features/search-input/ui';
-
-import s from './people-list.module.css';
+import { PeopleList } from 'entities/person';
 
 const PeopleListPage = () => {
-  const { peopleList } = usePeopleList();
-
-  console.log(peopleList);
-
-  return (
-    <div className={s.container}>
-      <SearchInput />
-      <PeopleGrid data={peopleList} />
-    </div>
-  );
+  return <PeopleList />;
 };
 
 export default PeopleListPage;

@@ -6,3 +6,5 @@ export const extractIdFromUrl = (url: string): string => {
 export const getPersonImage = (id: string) => {
   return `${import.meta.env.VITE_IMG_URL}/characters/${id}.jpg`;
 };
+
+export const PEOPLE_DEFAULT_PAGE_SIZE = 10;

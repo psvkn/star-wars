@@ -1,11 +1,13 @@
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { AxiosError, AxiosRequestConfig } from 'axios';
+import { useCallback, useEffect, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { type Person, swapiApi } from 'shared/api';
-import { GetPeopleListParams } from 'shared/api/swapi/people';
+import type { GetPeopleListParams } from 'shared/api/swapi/people';
 
 export const usePeopleList = () => {
   const [peopleList, setPeopleList] = useState<Person[]>([]);
   const [totalCount, setTotalCount] = useState(0);
+  const [isEmpty, setIsEmpty] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [hasError, setHasError] = useState(false);
 
@@ -14,23 +16,32 @@ export const usePeopleList = () => {
   const search = searchParams.get('search') || undefined;
   const page = searchParams.get('page') || '1';
 
-  const searchRef = useRef(search);
-
   const onLoadData = useCallback(
-    async ({ search, page = 1 }: GetPeopleListParams) => {
+    async (
+      { search, page = 1 }: GetPeopleListParams,
+      config?: AxiosRequestConfig,
+    ) => {
       try {
+        setIsEmpty(false);
         setHasError(false);
         setIsLoading(true);
-        const { data } = await swapiApi.people.getPeopleList({
-          search,
-          page: page,
-        });
+        const { data } = await swapiApi.people.getPeopleList(
+          {
+            search,
+            page: page,
+          },
+          config,
+        );
 
         setPeopleList(data.results);
         setTotalCount(data.count);
+        setIsEmpty(data.count === 0);
+        setIsLoading(false);
       } catch (e) {
+        if (e instanceof AxiosError && e.code === 'ERR_CANCELED') {
+          return;
+        }
         setHasError(true);
-      } finally {
         setIsLoading(false);
       }
     },
@@ -38,17 +49,17 @@ export const usePeopleList = () => {
   );
 
   useEffect(() => {
-    console.log(searchRef.current, search);
-    if (searchRef.current !== search) {
-      searchRef.current = search;
-      setSearchParams({ page: '1' });
-      return;
-    }
+    const controller = new AbortController();
+    onLoadData(
+      { search, page: Number.parseInt(page) },
+      { signal: controller.signal },
+    );
 
-    onLoadData({ search, page: Number.parseInt(page) });
+    return () => controller.abort();
   }, [search, page, onLoadData, setSearchParams]);
 
   return {
+    isEmpty,
     peopleList,
     totalCount,
     hasError,

@@ -14,12 +14,14 @@
     "antd": "^5.12.1",
     "axios": "^1.6.2",
     "compose-function": "^3.0.3",
+    "lodash.debounce": "^4.0.8",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-router-dom": "^6.20.1"
   },
   "devDependencies": {
     "@types/compose-function": "^0.0.33",
+    "@types/lodash.debounce": "^4.0.9",
     "@types/react": "^18.2.37",
     "@types/react-dom": "^18.2.15",
     "@typescript-eslint/eslint-plugin": "^6.10.0",
