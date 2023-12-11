@@ -18,12 +18,12 @@ export const getPeopleList = (
 };
 
 export type GetPersonByIdParams = {
-  taskId: number;
+  id: number;
 };
 
 export const getPersonById = (
-  { taskId }: GetPersonByIdParams,
+  { id }: GetPersonByIdParams,
   config?: AxiosRequestConfig,
 ): AxiosPromise<Person> => {
-  return apiInstance.get(`${BASE_URL}/${taskId}`, config);
+  return apiInstance.get(`${BASE_URL}/${id}`, config);
 };

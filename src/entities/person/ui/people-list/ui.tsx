@@ -10,16 +10,12 @@ import { PeopleGrid } from '../people-grid';
 
 import s from './people-list.module.css';
 
-const usePaginationOptions = () => {
+const usePaginationOptions = (): [number, (newPage: number) => void] => {
   const [searchParams, setSearchParams] = useSearchParams();
   const page = searchParams.get('page') || '1';
 
   const currentPage = useMemo(() => {
-    if (Number.isInteger(page)) {
-      return Number.parseInt(page);
-    }
-
-    return 1;
+    return Number.parseInt(page) || 1;
   }, [page]);
 
   const handlePageChange = (newPage: number) => {
@@ -34,7 +30,7 @@ const usePaginationOptions = () => {
     });
   };
 
-  return [currentPage, handlePageChange] as const;
+  return [currentPage, handlePageChange];
 };
 
 export const PeopleList = () => {
@@ -45,7 +41,7 @@ export const PeopleList = () => {
   const [searchParams, setSearchParams] = useSearchParams();
 
   const renderContent = () => {
-    if (isLoading) return <Spin className={s.spin} size="large" />;
+    if (isLoading) return <Spin size="large" />;
 
     if (isEmpty) return <Empty description="No data" />;
 
@@ -70,10 +66,11 @@ export const PeopleList = () => {
     <div className={s.container}>
       <Input
         onChange={debouncedOnChangeHandler}
+        placeholder="Search"
         prefix={<SearchOutlined />}
         defaultValue={searchParams.get('search') || ''}
       />
-      {renderContent()}
+      <div className={s.content}>{renderContent()}</div>
       <Pagination
         current={currentPage}
         onChange={setCurrentPage}
