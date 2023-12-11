@@ -20,3 +20,17 @@
   line-height: 1.5rem;
   font-weight: 600;
 }
+
+.list {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding: 0;
+  margin: 0;
+}
+
+@media (max-width: 576px) {
+  .container {
+    flex-direction: column;
+  }
+}

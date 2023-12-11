@@ -25,7 +25,7 @@ export const PersonInfo: FC<PersonInfoProps> = ({ data }) => {
         <Image width={200} src={getPersonImage(id)} />
         <EditPersonModal data={data} />
       </div>
-      <ul>
+      <ul className={s.list}>
         {personFields.map(({ key, title }) => (
           <li className={s.field} key={key}>
             <Typography.Text className={s.fieldTitle}>{title}:</Typography.Text>{' '}
